@@ -42,6 +42,42 @@ class Trasher extends Dog {
     }
 }
 
+class Gatling extends Creature {
+    constructor() {
+        super('Гатлинг', 6);
+    }
+
+    // Особая атака: 2 урона по всем картам противника по очереди
+    attack(gameContext, continuation) {
+        const { oppositePlayer } = gameContext;
+        const taskQueue = new TaskQueue();
+
+        // Мигание анимации атаки самой карты
+        taskQueue.push(onDone => this.view.showAttack(onDone));
+
+        // Атака по каждой карте противника в порядке слева направо
+        for (let position = 0; position < oppositePlayer.table.length; position++) {
+            const card = oppositePlayer.table[position];
+            if (card) {
+                taskQueue.push(onDone => {
+                    this.dealDamageToCreature(2, card, gameContext, onDone);
+                });
+            }
+        }
+
+        taskQueue.continueWith(continuation);
+    }
+
+    getDescriptions() {
+        return [
+            'Атакует всех противников на столе по 2 урона',
+            ...super.getDescriptions()
+        ];
+    }
+}
+
+export default Gatling;
+
 // Отвечает является ли карта уткой.
 function isDuck(card) {
     return card && card.quacks && card.swims;
@@ -76,14 +112,25 @@ export function getCreatureDescription(card) {
 // const banditStartDeck = [
 //     new Dog(),
 // ];
+// const seriffStartDeck = [
+//     new Duck(),
+//     new Duck(),
+//     new Duck(),
+//     new Duck(),
+// ];
+// const banditStartDeck = [
+//     new Trasher(),
+// ];
 const seriffStartDeck = [
     new Duck(),
     new Duck(),
     new Duck(),
-    new Duck(),
+    new Gatling(),
 ];
 const banditStartDeck = [
     new Trasher(),
+    new Dog(),
+    new Dog(),
 ];
 
 // Создание игры.
