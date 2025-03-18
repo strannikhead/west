@@ -49,7 +49,7 @@ class Gatling extends Creature {
 
     // Особая атака: 2 урона по всем картам противника по очереди
     attack(gameContext, continuation) {
-        const { oppositePlayer } = gameContext;
+        const {oppositePlayer} = gameContext;
         const taskQueue = new TaskQueue();
 
         // Мигание анимации атаки самой карты
@@ -78,6 +78,53 @@ class Gatling extends Creature {
 
 export default Gatling;
 
+class Lad extends Dog {
+    constructor() {
+        super('Браток');
+    }
+
+    static getInGameCount() {
+        return this.inGameCount || 0;
+    }
+
+    static setInGameCount(value) {
+        this.inGameCount = value;
+    }
+
+    doAfterComingIntoPlay() {
+        Lad.setInGameCount(Lad.getInGameCount() + 1);
+    }
+
+    doBeforeRemoving() {
+        Lad.setInGameCount(Lad.getInGameCount() - 1);
+    }
+
+    static getBonus() {
+        const quantity = this.getInGameCount();
+        return quantity * (quantity + 1) / 2;
+    }
+
+    modifyDealedDamageToCreature(value, toCard, gameContext, continuation) {
+        continuation(Math.max(0, this.getBonus()));
+    }
+
+    modifyTakenDamage(value, toCard, gameContext, continuation) {
+        continuation(Math.max(0, this.getBonus()));
+    }
+
+    getDescriptions() {
+        if (Lad.prototype.hasOwnProperty('modifyDealedDamageToCreature')) {
+            return [
+                'Чем их больше, тем они сильнее',
+                ...super.getDescriptions()
+            ];
+        } else {
+            return super.getDescriptions();
+        }
+    }
+}
+
+
 // Отвечает является ли карта уткой.
 function isDuck(card) {
     return card && card.quacks && card.swims;
@@ -103,34 +150,14 @@ export function getCreatureDescription(card) {
 }
 
 
-// Колода Шерифа, нижнего игрока.
-// const seriffStartDeck = [
-//     new Duck(),
-//     new Duck(),
-//     new Duck(),
-// ];
-// const banditStartDeck = [
-//     new Dog(),
-// ];
-// const seriffStartDeck = [
-//     new Duck(),
-//     new Duck(),
-//     new Duck(),
-//     new Duck(),
-// ];
-// const banditStartDeck = [
-//     new Trasher(),
-// ];
 const seriffStartDeck = [
     new Duck(),
     new Duck(),
     new Duck(),
-    new Gatling(),
 ];
 const banditStartDeck = [
-    new Trasher(),
-    new Dog(),
-    new Dog(),
+    new Lad(),
+    new Lad(),
 ];
 
 // Создание игры.
