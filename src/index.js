@@ -28,11 +28,14 @@ function getCreatureDescription(card) {
 }
 
 
-
 // Основа для утки.
 function Duck() {
-    this.quacks = function () { console.log('quack') };
-    this.swims = function () { console.log('float: both;') };
+    this.quacks = function () {
+        console.log('quack')
+    };
+    this.swims = function () {
+        console.log('float: both;')
+    };
 }
 
 
