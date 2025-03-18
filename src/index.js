@@ -4,8 +4,8 @@ import TaskQueue from './TaskQueue.js';
 import SpeedRate from './SpeedRate.js';
 
 class Duck extends Creature {
-    constructor(name = "Мирная утка", image) {
-        super();
+    constructor(name = "Мирная утка") {
+        super(name, 2);
     }
 
     quacks() {
@@ -103,24 +103,6 @@ export function getCreatureDescription(card) {
 }
 
 
-// Колода Шерифа, нижнего игрока.
-// const seriffStartDeck = [
-//     new Duck(),
-//     new Duck(),
-//     new Duck(),
-// ];
-// const banditStartDeck = [
-//     new Dog(),
-// ];
-// const seriffStartDeck = [
-//     new Duck(),
-//     new Duck(),
-//     new Duck(),
-//     new Duck(),
-// ];
-// const banditStartDeck = [
-//     new Trasher(),
-// ];
 const seriffStartDeck = [
     new Duck(),
     new Duck(),
