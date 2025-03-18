@@ -1,10 +1,10 @@
-import Card from './Card.js';
+import {Creature} from './Card.js';
 import Game from './Game.js';
 import TaskQueue from './TaskQueue.js';
 import SpeedRate from './SpeedRate.js';
 
-class Duck extends Card{
-    constructor(name="Мирная утка") {
+class Duck extends Creature{
+    constructor(name="Мирная утка", image) {
         super();
     }
 
@@ -17,9 +17,32 @@ class Duck extends Card{
     }
 }
 
-class Dog extends Card{
+class Dog extends Creature{
     constructor(name = 'Пес-бандит', power = 3) {
         super(name, power);
+    }
+}
+
+class Trasher extends Dog {
+    constructor() {
+        super('Громила', 5);
+    }
+
+
+
+    modifyTakenDamage(value, fromCard, gameContext, continuation) {
+        this.view.signalAbility(() => {
+            // После мигания уменьшаем урон на 1, но не меньше 0
+            continuation(Math.max(0, value - 1));
+        });
+    }
+
+    // Добавим описание способности, вместе с базовым описанием
+    getDescriptions() {
+        return [
+            'Получает на 1 меньше урона',
+            ...super.getDescriptions()
+        ];
     }
 }
 
@@ -34,7 +57,7 @@ function isDog(card) {
 }
 
 // Дает описание существа по схожести с утками и собаками
-function getCreatureDescription(card) {
+export function getCreatureDescription(card) {
     if (isDuck(card) && isDog(card)) {
         return 'Утка-Собака';
     }
