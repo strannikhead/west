@@ -3,8 +3,8 @@ import Game from './Game.js';
 import TaskQueue from './TaskQueue.js';
 import SpeedRate from './SpeedRate.js';
 
-class Duck extends Creature{
-    constructor(name="Мирная утка", image) {
+class Duck extends Creature {
+    constructor(name = "Мирная утка", image) {
         super();
     }
 
@@ -17,7 +17,7 @@ class Duck extends Creature{
     }
 }
 
-class Dog extends Creature{
+class Dog extends Creature {
     constructor(name = 'Пес-бандит', power = 3) {
         super(name, power);
     }
@@ -29,7 +29,6 @@ class Trasher extends Dog {
     }
 
 
-
     modifyTakenDamage(value, fromCard, gameContext, continuation) {
         this.view.signalAbility(() => {
             // После мигания уменьшаем урон на 1, но не меньше 0
@@ -39,10 +38,7 @@ class Trasher extends Dog {
 
     // Добавим описание способности, вместе с базовым описанием
     getDescriptions() {
-        return [
-            'Получает на 1 меньше урона',
-            ...super.getDescriptions()
-        ];
+        return ['Получает на 1 меньше урона', ...super.getDescriptions()];
     }
 }
 
@@ -72,15 +68,23 @@ export function getCreatureDescription(card) {
 
 
 // Колода Шерифа, нижнего игрока.
+// const seriffStartDeck = [
+//     new Duck(),
+//     new Duck(),
+//     new Duck(),
+// ];
+// const banditStartDeck = [
+//     new Dog(),
+// ];
 const seriffStartDeck = [
+    new Duck(),
     new Duck(),
     new Duck(),
     new Duck(),
 ];
 const banditStartDeck = [
-    new Dog(),
+    new Trasher(),
 ];
-
 
 // Создание игры.
 const game = new Game(seriffStartDeck, banditStartDeck);
